@@ -115,11 +115,78 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="nZ5-Qb-1OX"/>
                     </view>
-                    <navigationItem key="navigationItem" id="Gt1-Qy-kPQ"/>
+                    <navigationItem key="navigationItem" id="Gt1-Qy-kPQ">
+                        <barButtonItem key="rightBarButtonItem" image="insta_camera_btn" id="3qH-6E-wfF">
+                            <connections>
+                                <segue destination="Mxc-gl-47G" kind="presentation" id="XuR-pj-FAN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xvC-HX-ZWd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1564" y="134"/>
+            <point key="canvasLocation" x="1645" y="134"/>
+        </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="jqY-DW-rjJ">
+            <objects>
+                <viewController id="Mxc-gl-47G" customClass="CameraViewController" customModule="Parstagram" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AdO-RM-Jov">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="vQP-fN-Hw3">
+                                <rect key="frame" x="20" y="44" width="374" height="375"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Q73-Zo-LQu" appends="YES" id="EO8-k9-2ud"/>
+                                </connections>
+                            </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Your tag here!" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mgC-po-FHo">
+                                <rect key="frame" x="0.0" y="427" width="414" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fzm-qJ-rHq">
+                                <rect key="frame" x="0.0" y="465" width="414" height="30"/>
+                                <state key="normal" title="Submit"/>
+                                <connections>
+                                    <action selector="onSubmit:" destination="Mxc-gl-47G" eventType="touchUpInside" id="Xig-BZ-9mY"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="mgC-po-FHo" firstAttribute="leading" secondItem="cpT-xO-zR9" secondAttribute="leading" id="Azg-mB-ohh"/>
+                            <constraint firstItem="fzm-qJ-rHq" firstAttribute="trailing" secondItem="cpT-xO-zR9" secondAttribute="trailing" id="Btw-Nx-EJw"/>
+                            <constraint firstItem="mgC-po-FHo" firstAttribute="top" secondItem="vQP-fN-Hw3" secondAttribute="bottom" constant="8" id="KfY-UO-uNa"/>
+                            <constraint firstItem="fzm-qJ-rHq" firstAttribute="leading" secondItem="cpT-xO-zR9" secondAttribute="leading" id="LKk-mz-J4k"/>
+                            <constraint firstItem="mgC-po-FHo" firstAttribute="trailing" secondItem="cpT-xO-zR9" secondAttribute="trailing" id="MYG-zF-D27"/>
+                            <constraint firstItem="mgC-po-FHo" firstAttribute="leading" secondItem="cpT-xO-zR9" secondAttribute="leading" id="SKt-Vf-eIH"/>
+                            <constraint firstItem="vQP-fN-Hw3" firstAttribute="trailing" secondItem="cpT-xO-zR9" secondAttribute="trailing" constant="-20" id="Tj3-Lm-Tg7"/>
+                            <constraint firstItem="mgC-po-FHo" firstAttribute="trailing" secondItem="cpT-xO-zR9" secondAttribute="trailing" id="WK9-Z5-zvh"/>
+                            <constraint firstItem="vQP-fN-Hw3" firstAttribute="top" secondItem="cpT-xO-zR9" secondAttribute="top" id="XKe-lG-yJe"/>
+                            <constraint firstItem="vQP-fN-Hw3" firstAttribute="leading" secondItem="cpT-xO-zR9" secondAttribute="leading" constant="20" id="YaU-6g-Y9p"/>
+                            <constraint firstItem="fzm-qJ-rHq" firstAttribute="top" secondItem="mgC-po-FHo" secondAttribute="bottom" constant="8" id="Ygi-KE-mgU"/>
+                            <constraint firstItem="fzm-qJ-rHq" firstAttribute="leading" secondItem="cpT-xO-zR9" secondAttribute="leading" id="jFH-bv-Y3f"/>
+                            <constraint firstItem="fzm-qJ-rHq" firstAttribute="trailing" secondItem="cpT-xO-zR9" secondAttribute="trailing" id="zak-jt-WCm"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cpT-xO-zR9"/>
+                    </view>
+                    <connections>
+                        <outlet property="cameraImage" destination="vQP-fN-Hw3" id="bMX-dP-6Q1"/>
+                        <outlet property="photoTag" destination="mgC-po-FHo" id="s6y-gy-EIy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jgt-AP-p5D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Q73-Zo-LQu">
+                    <connections>
+                        <action selector="onCameraTap:" destination="Mxc-gl-47G" id="ll2-yu-Uw0"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="2479.7101449275365" y="133.92857142857142"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="pSk-ls-iPr">
@@ -140,4 +207,8 @@
             <point key="canvasLocation" x="842" y="134"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="image_placeholder" width="375" height="375"/>
+        <image name="insta_camera_btn" width="25" height="25"/>
+    </resources>
 </document>

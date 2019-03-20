@@ -22,6 +22,10 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func onSignUp(_ sender: UIButton) {
+        signUpUser()
+    }
+    
+    func signUpUser(){
         let user = PFUser()
         user.username = usernameField.text
         user.password = passField.text
@@ -32,11 +36,16 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func onSignIn(_ sender: UIButton) {
-        PFUser.logInWithUsername(inBackground: usernameField.text!, password: passField.text!) { (user, error) in
-            user != nil ? self.performSegue(withIdentifier: "onsignin", sender: nil) : print("Error logging in \(error?.localizedDescription)")
-        }
+       logInUser()
     }
     
+    func logInUser(){
+        PFUser.logInWithUsername(inBackground: usernameField.text!, password: passField.text!) { (user, error) in
+            user != nil ? self.performSegue(withIdentifier: "onsignin", sender: nil) : print("Error logging in \(error?.localizedDescription)")
+            let sessionToken: String = (user?.sessionToken)!
+            print(sessionToken)
+        }
+    }
     
 
 }
