@@ -8,6 +8,7 @@
 
 import UIKit
 import AlamofireImage
+import Parse
 
 class CameraViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     @IBOutlet weak var cameraImage: UIImageView!
@@ -19,7 +20,24 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
     
     @IBAction func onSubmit(_ sender: UIButton) {
+        let post = PFObject(className: "Posts")
         
+        post["caption"] = photoTag.text
+        post["author"] = PFUser.current()
+        
+        let imageData = cameraImage.image?.pngData()
+        let file = PFFileObject(data: imageData!)
+        
+        post["image"] = file
+        
+        post.saveInBackground(){(success, error) in
+            if success{
+                print("posted item")
+                self.dismiss(animated: true, completion: nil)
+            }else{
+                print("trouble posting item")
+            }
+        }
     }
     
     @IBAction func onCameraTap(_ sender: UITapGestureRecognizer) {
