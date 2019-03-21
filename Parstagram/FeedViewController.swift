@@ -14,7 +14,14 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
    
     @IBOutlet weak var tableView: UITableView!
     
+    //holds the objects from database
     var posts = [PFObject]()
+    
+    //limit for the query
+    var postLimit = 5
+    
+    //is used for pull to refresh
+    let myRefreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,23 +31,44 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 278
+        
+        pullToRefresh()
     }
     
+    //pull to refresh funcs. had to order by createdAt to make this function useful
+    func pullToRefresh(){
+        myRefreshControl.addTarget(self, action: #selector(loadDataWithPtF), for: .valueChanged)
+        tableView.refreshControl = myRefreshControl
+    }
+    
+    @objc func loadDataWithPtF(){
+       loadsDataWithQuery(limt: postLimit)
+        self.tableView.reloadData()
+        self.myRefreshControl.endRefreshing()
+    }
+    
+    //runs when the view appears on screen successfully
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        let query = PFQuery(className: "Posts")
+        loadsDataWithQuery(limt: postLimit)
+    }
+    
+    //the get request to database with Parse
+    func loadsDataWithQuery(limt l:Int){
+        let query = PFQuery(className: "Posts").order(byDescending: "createdAt")
         query.includeKey("author")
-        query.limit = 10
+        query.limit = l
         
         query.findObjectsInBackground{(posts, error) in
             if posts != nil{
                 self.posts = posts!
                 self.tableView.reloadData()
             }
+            print(self.posts)
         }
     }
     
+    //configure tableView cell counts and the cell itself
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
@@ -49,7 +77,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as! PostCell
         
         let post = posts[indexPath.row]
-        
+
         let user = post["author"]as! PFUser
         cell.authorName.text = user.username
         
@@ -63,5 +91,27 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.postImageView.af_setImage(withURL: url!)
         
         return cell
+    }
+    
+    //onScrollEnd
+    func loadMorePostsOnScroll(){
+        print("loadMore getting called")
+        let query = PFQuery(className: "Posts").order(byDescending: "createdAt")
+        query.includeKey("author")
+        postLimit = postLimit + 5
+        query.limit = postLimit
+        
+        query.findObjectsInBackground{(posts, error) in
+            if posts != nil{
+                self.posts = posts!
+                self.tableView.reloadData()
+            }
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print("Scroll end getting triggered")
+        indexPath.row + 1 == posts.count ? loadMorePostsOnScroll() : nil
     }
 }
