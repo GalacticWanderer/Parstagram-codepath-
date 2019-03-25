@@ -22,6 +22,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             configuration.server = "https://protected-crag-17599.herokuapp.com/parse"
         }))
         
+        //if current user exits, direct to FeedNavigationController (storyboard ID)
+        if PFUser.current() != nil{
+            //referencing the Main.storyboard
+            let main = UIStoryboard(name: "Main", bundle: nil)
+            
+            //referencing the FeedNavigationController
+            let feedNavigationController = main.instantiateViewController(withIdentifier: "FeedNavigationController")
+            
+            //setting the rootViewController to FeedNavigationController
+            window?.rootViewController = feedNavigationController
+        }
+        
         return true
     }
 

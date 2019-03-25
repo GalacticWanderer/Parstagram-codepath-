@@ -114,4 +114,21 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         print("Scroll end getting triggered")
         indexPath.row + 1 == posts.count ? loadMorePostsOnScroll() : nil
     }
+    
+    //logout
+    @IBAction func onLogout(_ sender: UIBarButtonItem) {
+        PFUser.logOut()
+        //LoginViewController
+        
+        //referencing the Main.storyboard
+        let main = UIStoryboard(name: "Main", bundle: nil)
+        
+        //referencing the loginViewController
+        let loginViewController = main.instantiateViewController(withIdentifier: "LoginViewController")
+        
+        //getting access to the delegate of the app and then settingb the rootVC back to loginVC
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        delegate.window?.rootViewController = loginViewController
+    }
+    
 }
