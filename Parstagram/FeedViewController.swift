@@ -166,15 +166,15 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    //****Bug**** incorrect indexPath.row and add comment doesn't get triggered as expected
     //triggers when tapped on a table cell
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //adding a comment on each tap
         //post stores the index of the tapped cell
-        let post = posts[indexPath.row]
+        let post = posts[indexPath.section]
         
         //creating a new class called comment
         let comments = (post["comments"] as? [PFObject]) ?? []
+        print("The section is->> \(indexPath.section) indexPath.row is->> \(indexPath.row) and comment.count is \(comments.count)")
         
         if indexPath.row == comments.count + 1 {
             canShowCommentBar = true
