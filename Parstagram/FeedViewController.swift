@@ -30,21 +30,22 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //commentBar setup
         commentBar.inputTextView.placeholder = "Type your comment"
         commentBar.sendButton.title = "Post"
         commentBar.delegate = self
-
+        let center = NotificationCenter.default
+        center.addObserver(self, selector: #selector(hideKeyBoard(note:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        tableView.keyboardDismissMode = .onDrag
+        
+        //tableView setups
         tableView.delegate = self
         tableView.dataSource = self
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 278
         
-        tableView.keyboardDismissMode = .onDrag
-        
-        let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(hideKeyBoard(note:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+        //pull to refresh func
         pullToRefresh()
     }
     
@@ -63,15 +64,19 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         becomeFirstResponder()
     }
     
+    //message send function
     func messageInputBar(_ inputBar: MessageInputBar, didPressSendButtonWith text: String) {
         
+        //crearte class at parse (if not exists)
         let comment = PFObject(className: "Comments")
         comment["text"] = text
         comment["post"] = selectedPost
         comment["author"] = PFUser.current()
         
+        //add comment to the Post PFObject that is selected from the tableView
         selectedPost.add(comment, forKey: "comments")
         
+        //saves in background
         selectedPost.saveInBackground { (success, error) in
           success ? print("Comment posted") : print("Couldn't post comment \(error)")
         }
@@ -125,14 +130,19 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return comments.count + 2
     }
     
+    //returns sections for tableView
     func numberOfSections(in tableView: UITableView) -> Int {
         return posts.count
     }
     
+    //the tableView cell configuration func
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //getting the proper section of data
         let post = posts[indexPath.section]
+        //getting the comments
         let comments = (post["comments"] as? [PFObject]) ?? []
         
+        //for the first section, configure the post cell and return it
         if indexPath.row == 0{
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as! PostCell
             
@@ -149,6 +159,8 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell.postImageView.af_setImage(withURL: url!)
             
             return cell
+            
+        //for second section which is less than or equal to the comments attached to the post, return the comment cell
         } else if indexPath.row <= comments.count {
             let commentCell = tableView.dequeueReusableCell(withIdentifier: "CommentCell") as! CommentCell
             
@@ -159,6 +171,8 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             commentCell.commenterName.text = user.username
             
             return commentCell
+        
+            //and finally, the add a comment cell activates the InputKeyboard so the user can post a comment
         } else{
             let addCommentCell = tableView.dequeueReusableCell(withIdentifier: "AddCommentCell")!
             
@@ -203,6 +217,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
+    //triggers on scroll end
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         print("Scroll end getting triggered")
         indexPath.row + 1 == posts.count ? loadMorePostsOnScroll() : nil
@@ -223,5 +238,4 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let delegate = UIApplication.shared.delegate as! AppDelegate
         delegate.window?.rootViewController = loginViewController
     }
-    
 }
